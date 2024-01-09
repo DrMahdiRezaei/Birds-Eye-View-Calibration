@@ -18,17 +18,17 @@ def checkReduction(image):
 
 
 ''''''''''''''' Background Extractor '''''''''''''''
-def calcBackgound(VideoPath, reduc, Save=None):
+def calcBackgound(VideoPath, reduce, Save=None):
     cap = cv2.VideoCapture(VideoPath)
     _, f = cap.read()
-    f= cv2.resize(f, (f.shape[1]// reduc , f.shape[0] // reduc))
+    f= cv2.resize(f, (f.shape[1]// reduce , f.shape[0] // reduce))
     img_bkgd = np.float32(f)
-    # reduc = checkReduction(img_bkgd)
+    # reduce = checkReduction(img_bkgd)
     print('<< When you feel the background is sufficiently clear, press SPACE to end and save the background.')
     while True:
         ret, f = cap.read()
         if not ret: break
-        f= cv2.resize(f, (f.shape[1]// reduc , f.shape[0] // reduc))
+        f= cv2.resize(f, (f.shape[1]// reduce , f.shape[0] // reduce))
         cv2.imshow('Main Video', f)
         cv2.accumulateWeighted(f, img_bkgd, 0.01)
         res2 = cv2.convertScaleAbs(img_bkgd)
@@ -141,8 +141,8 @@ navigattorSize = 80
 def Semi(Camera, Satellite, Save=None):
     Hsapace = 20
     Vspace = 10
-    reducC = checkReduction(Camera)
-    reducS = checkReduction(Satellite)
+    reduceC = checkReduction(Camera)
+    reduceS = checkReduction(Satellite)
 
     while True:
         fp1 = getFeaturePoint(Satellite, '<< Choose a minimum of 4 random points for satellite matching | Actions: SPACE = Complete, R = Retry |' , colorPool=colorPool, navigattorSize=navigattorSize, reduction=2)
@@ -171,7 +171,7 @@ def Semi(Camera, Satellite, Save=None):
         alls[0:img2.shape[0], img1.shape[1] + matchPart:w, :] = img2
         for i in range(len(seeds1)):
             try: 
-                pt1 = seeds1[i][0] // reducS, seeds1[i][1] // reducS
+                pt1 = seeds1[i][0] // reduceS, seeds1[i][1] // reduceS
                 pt2 = img1.shape[1] + Hsapace , navigattorSize//2 + Vspace
                 color = colorPool[i+1]
                 cv2.line(alls, pt1, pt2, color, 2)
@@ -186,7 +186,7 @@ def Semi(Camera, Satellite, Save=None):
                 alls[topLeft[1] : downRight[1],  topLeft[0] : downRight[0], :] = seedsimg2[i]
                 cv2.rectangle(alls ,topLeft,downRight, color, 2)
                 
-                pt1 = img1.shape[1] + matchPart + seeds2[i][0] // reducC, seeds2[i][1] // reducC
+                pt1 = img1.shape[1] + matchPart + seeds2[i][0] // reduceC, seeds2[i][1] // reduceC
                 pt2 = img1.shape[1] + Hsapace*2 + navigattorSize*2, navigattorSize //2 + Vspace
                 cv2.line(alls, pt1, pt2, color, 2)
             except Exception as e:
@@ -194,8 +194,8 @@ def Semi(Camera, Satellite, Save=None):
                     >> Info: Nevertheless, there is no need to worry as the calibration is progressing well.")
             Vspace += navigattorSize + 10 
         
-        reduc = checkReduction(alls)
-        alls_resized= cv2.resize(alls, (alls.shape[1]// reduc , alls.shape[0] // reduc))
+        reduce = checkReduction(alls)
+        alls_resized= cv2.resize(alls, (alls.shape[1]// reduce , alls.shape[0] // reduce))
         cv2.imshow('Summary of your matched points | Actions: SPACE = Complete, R = = Retry |' , alls_resized)
         k = cv2.waitKey(0)
         if k%256 == R: cv2.destroyAllWindows(); continue
@@ -205,8 +205,8 @@ def Semi(Camera, Satellite, Save=None):
 
         Transparency = 0.5; mapped_results = cv2.addWeighted(Satellite, Transparency, mapped, 1 - Transparency, 0)
         
-        reduc = checkReduction(mapped_results)
-        mapped_results_resized= cv2.resize(mapped_results, (alls.shape[1]// reduc , alls.shape[0] // reduc))
+        reduce = checkReduction(mapped_results)
+        mapped_results_resized= cv2.resize(mapped_results, (alls.shape[1]// reduce , alls.shape[0] // reduce))
         cv2.imshow('Camera image Mapped on Satellite image', mapped_results_resized)
 
         s = Camera.shape
@@ -494,7 +494,7 @@ def main(opt):
         os.mkdir(output_path)
 
     Satellite = cv2.imread(Sat)
-    Background = calcBackgound(Input, reduc=2, Save=f'{output_path}\\Background.bmp')
+    Background = calcBackgound(Input, reduce=2, Save=f'{output_path}\\Background.bmp')
     ROI, ROI_Coords = _getROI(Background, Save=f'{output_path}\\Region of Interest.bmp')
     BEV_Coordinate, BEV_size = Semi(ROI, Satellite, Save=f'{output_path}\\Bird Eye View.bmp')
     Pixel_Unie = getPixelUnit(ROI, realDistance=1, Coordinate=BEV_Coordinate, BEV_size=BEV_size, Save=f'{output_path}\\Pixel Unit.bmp')
