@@ -20,17 +20,17 @@ def checkReduction(image):
  
 
 ''''''''''''''' Background Extractor '''''''''''''''
-def calcBackgound(VideoPath, reduc, Save=None):
+def calcBackgound(VideoPath, reduce, Save=None):
     cap = cv2.VideoCapture(VideoPath)
     _, f = cap.read()
-    f= cv2.resize(f, (f.shape[1]// reduc , f.shape[0] // reduc))
+    f= cv2.resize(f, (f.shape[1]// reduce , f.shape[0] // reduce))
     img_bkgd = np.float32(f)
     # reduc = checkReduction(img_bkgd)
     print('<< When you feel the background is sufficiently clear, press SPACE to end and save the background.')
     while True:
         ret, f = cap.read()
         if not ret: break
-        f= cv2.resize(f, (f.shape[1]// reduc , f.shape[0] // reduc))
+        f= cv2.resize(f, (f.shape[1]// reduce , f.shape[0] // reduce))
         cv2.imshow('Main Video', f)
         cv2.accumulateWeighted(f, img_bkgd, 0.01)
         res2 = cv2.convertScaleAbs(img_bkgd)
@@ -46,12 +46,12 @@ def calcBackgound(VideoPath, reduc, Save=None):
 ''''''''''''''' Region of Interest '''''''''''''''
 def _getROI(image, Save=None):
     while True:
-        roi, coords , roiImage = getROI('<< Select a Region of Interst for caliibration | Actions: SPACE = Complete,  R = Retry |', image).run()
+        roi, coords , roiImage = getROI('<< Select a Region of Interest for caliibration | Actions: SPACE = Complete,  R = Retry |', image).run()
         zeroDim = False
         for i in roi.shape:
             if i ==0: zeroDim = True
         if zeroDim: continue
-        cv2.imshow(':: Your Region of Interrest | Actions: SPACE = Complete,  R = Retry |', roi)
+        cv2.imshow(':: Region of Interest | Actions: SPACE = Complete,  R = Retry |', roi)
         k = cv2.waitKey(0)
         if k%256 == R: cv2.destroyAllWindows(); continue
         elif k%256 == SPACE: cv2.destroyAllWindows(); break
@@ -146,7 +146,7 @@ def getMask(image, coords, Save=None):
 
 def Manual(Background, Save=None):
     while True:
-        fp = getFeaturePoint(Background, '<< Choose 4 points to define the ground plane | Actions: SPACE = Complete, R = Retry |' , colorPool=colorPool, navigattorSize=navigattorSize, reduction=checkReduction(Background), DrawLine=True)
+        fp = getFeaturePoint(Background, '<< Choose 4 arbitrary points to define the ground plane | Actions: SPACE = Complete, R = Retry |' , colorPool=colorPool, navigattorSize=navigattorSize, reduction=checkReduction(Background), DrawLine=True)
         seeds, img , _= fp.run()
         k = cv2.waitKey(0)
         if k == 114 or len(seeds) != 4: cv2.destroyAllWindows(); continue
