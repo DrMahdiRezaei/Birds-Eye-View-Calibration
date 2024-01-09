@@ -1,8 +1,9 @@
 # Birds Eye View Calibration Toolkit
 
-This toolkit provides an implementation of the Inverse Perspective Mapping (IPM) technique using Python and OpenCV. It includes functionalities for calibration through both manual and satellite-based methods.
+The Inverse Perspective Mapping (IPM), is the process of converting a perspective image to a perpendicular top-to-bottom view image, also known as Bird's Eye View Mapping (BEW).
+This process involves some initial calibration steps. The toolkit in this repository provides a calibration technique using Python and OpenCV which is applicable to both manual and satellite-image-based calibration methods.
 
-**The tutorial for using the toolkit is outlined in Guide.pdf.**
+**The tutorial for using the toolkit is outlined in the file Guide.pdf.**
 
 ## Requirements
 - OS: Windows / Linux / Mac
@@ -12,20 +13,20 @@ This toolkit provides an implementation of the Inverse Perspective Mapping (IPM)
 
 ## Calibration Methods
 ### Manual Calibration ('Calib_GrndPlane.py')
-This script allows manual determination of the ground plane and estimation of BEV calibration points from a video file. It involves the following steps:
-- Background Extraction: Removing moving objects in the scene.
+This script allows manual determination of the ground plane and estimation of BEV calibration points from a video file, as follows:
+- Background Extraction: Removing the moving objects in the scene.
 - ROI Determination: Selecting the region of interest.
-- Ground Plane Selection: Marking four points to create a foursquare in the scene.
+- Ground Plane Selection: Marking four points to create a square in the scene.
 - Refining Aspect Ratio: Determining pixel-to-meter ratio in two directions.
 The process generates a folder with configuration files and images representing each step.
 
 ### Satellite-based Calibration ('Calib_SatFeature.py')
-This script requires a satellite image of the location where the video is recorded and involves the following steps:
+This script requires a perpendicular satellite image of the location where the video is recorded and involves the following steps:
 - Background Extraction: Removing moving objects in the scene.
 - ROI Determination: Selecting the region of interest.
 - Point Identification: Selecting at least four points in the satellite image and reidentifying them in the video scene.
 - Refining Aspect Ratio: Determining pixel-to-meter ratio in two directions.
-Similar to the manual calibration, this process also generates a folder with configuration files and step-by-step images.
+Similar to the manual calibration, this process generates a folder with configuration files and step-by-step images.
 
 
 ## References
