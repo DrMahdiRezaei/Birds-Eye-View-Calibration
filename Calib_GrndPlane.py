@@ -25,7 +25,7 @@ def calcBackgound(VideoPath, reduce, Save=None):
     _, f = cap.read()
     f= cv2.resize(f, (f.shape[1]// reduce , f.shape[0] // reduce))
     img_bkgd = np.float32(f)
-    # reduc = checkReduction(img_bkgd)
+    # reduce = checkReduction(img_bkgd)
     print('<< When you feel the background is sufficiently clear, press SPACE to end and save the background.')
     while True:
         ret, f = cap.read()
@@ -46,7 +46,7 @@ def calcBackgound(VideoPath, reduce, Save=None):
 ''''''''''''''' Region of Interest '''''''''''''''
 def _getROI(image, Save=None):
     while True:
-        roi, coords , roiImage = getROI('<< Select a Region of Interest for caliibration | Actions: SPACE = Complete,  R = Retry |', image).run()
+        roi, coords , roiImage = getROI('<< Select a Region of Interest for calibration | Actions: SPACE = Complete,  R = Retry |', image).run()
         zeroDim = False
         for i in roi.shape:
             if i ==0: zeroDim = True
@@ -452,7 +452,7 @@ def main(opt):
     else:
         os.mkdir(output_path)
 
-    Background = calcBackgound(Input, reduc=2, Save=f'{output_path}\\Background.bmp')
+    Background = calcBackgound(Input, reduce=2, Save=f'{output_path}\\Background.bmp')
     ROI, ROI_Coords = _getROI(Background, Save=f'{output_path}\\Region of Interest.bmp')
     BEV_Coordinate, BEV_size = Manual(ROI, Save=f'{output_path}\\Bird Eye View.bmp')
     Pixel_Unie = getPixelUnit(ROI, realDistance=1, Coordinate=BEV_Coordinate, BEV_size=BEV_size, Save=f'{output_path}\\Pixel Unit.bmp')
