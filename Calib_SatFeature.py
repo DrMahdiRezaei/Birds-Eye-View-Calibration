@@ -44,12 +44,12 @@ def calcBackgound(VideoPath, reduce, Save=None):
 ''''''''''''''' Region of Interest '''''''''''''''
 def _getROI(image, Save=None):
     while True:
-        roi, coords , roiImage = getROI('<< Select a Region of Interst for caliibration | Actions: SPACE = Complete,  R = Retry |', image).run()
+        roi, coords , roiImage = getROI('<< Select a Region of Interst for calibration | Actions: SPACE = Complete,  R = Retry |', image).run()
         zeroDim = False
         for i in roi.shape:
             if i ==0: zeroDim = True
         if zeroDim: continue
-        cv2.imshow(':: Your Region of Interrest | Actions: SPACE = Complete,  R = Retry |', roi)
+        cv2.imshow(':: Region of Interest | Actions: SPACE = Complete,  R = Retry |', roi)
         k = cv2.waitKey(0)
         if k%256 == R: cv2.destroyAllWindows(); continue
         elif k%256 == SPACE: cv2.destroyAllWindows(); break
